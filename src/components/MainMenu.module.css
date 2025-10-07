@@ -1,0 +1,15 @@
+/* src/components/MainMenu.module.css */
+
+.menuContainer {
+  display: flex;
+  flex-direction: column; /* This stacks the buttons vertically */
+  align-items: center;    /* This centers them on the page */
+  gap: 15px;              /* This adds some space between them */
+}
+
+.menuButton {
+  width: 250px;           /* Give the buttons a consistent width */
+  padding: 12px;
+  font-size: 1.1rem;      /* Make the text a bit bigger */
+  cursor: pointer;
+}
