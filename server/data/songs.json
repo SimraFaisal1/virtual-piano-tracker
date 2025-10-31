@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Fur Elise",
+    "difficulty": "medium",
+    "bpm": 90,
+    "key": "A minor",
+    "description": "Classical piece by Beethoven"
+  },
+  {
+    "id": 2,
+    "title": "Twinkle Twinkle",
+    "difficulty": "easy",
+    "bpm": 60,
+    "key": "C major",
+    "description": "Beginner melody"
+  },
+  {
+    "id": 3,
+    "title": "Chopin Nocturne",
+    "difficulty": "hard",
+    "bpm": 70,
+    "key": "E-flat major",
+    "description": "Romantic era piece"
+  },
+  {
+    "id": 4,
+    "title": "Creep",
+    "difficulty": "hard",
+    "bpm": 92,
+    "key": "G major",
+    "description": "I'm a creep, I'm a weirdo"
+  }
+]
