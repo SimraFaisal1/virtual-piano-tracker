@@ -23,7 +23,6 @@ function MainMenu({ onFreestyleClick, onLevelsClick, onSongsClick, onForumClick 
 
       <button 
         className={styles.menuButton} 
-        // onClick={onForumClick} // This will be enabled when the forum is built
       >
         Forum
       </button>
