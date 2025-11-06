@@ -8,17 +8,18 @@ import SheetMusicView from './components/SheetMusicView';
 import SongList from './components/SongList';
 import PlayerView from './components/PlayerView';
 import Piano from './components/Piano';
-// Future
+import FreestyleView from "./components/FreestyleView";
+
 // import ForumList from './components/ForumList';
 // import PostView from './components/PostView';
 
 function App() {
-  // --- State Management ---
+  //State Management
   const [currentView, setCurrentView] = useState('start');
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [backendMsg, setBackendMsg] = useState('Connecting to backend...');
 
-  // --- API Test (FastAPI connection) ---
+  //api test (not needed anymore)
   useEffect(() => {
     fetch('/api/ping')
       .then(res => {
@@ -29,16 +30,16 @@ function App() {
       .catch(() => setBackendMsg('⚠️ Backend not reachable'));
   }, []);
 
-  // --- Navigation Handler Functions ---
+  // navigation handler functions
   const handleStartClick = () => setCurrentView('mainMenu');
   const handleBackToMenu = () => setCurrentView('mainMenu');
 
-  // Sheet Notation Flow
+  // sheet notation flow
   const handleShowLevels = () => setCurrentView('levelList');
   const handleShowSheetMusic = () => setCurrentView('sheetMusic');
   const handleBackToLevels = () => setCurrentView('levelList');
 
-  // Guided Songs Flow
+  //guided songs flow
   const handleShowSongList = () => setCurrentView('songList');
   const handleSongSelect = (songId) => {
     setSelectedSongId(songId);
@@ -46,15 +47,15 @@ function App() {
   };
   const handleBackToSongList = () => setCurrentView('songList');
   
-  // Freestyle Flow
+  //Freestyle Flow
   const handleShowFreestyle = () => setCurrentView('freestyle');
 
-  // Forum Flow (for the future)
-  // const handleShowForum = () => setCurrentView('forumList');
+  //forum flow (for the future)
+  //const handleShowForum = () => setCurrentView('forumList');
 
   return (
     <div className="App">
-      {/* --- Conditional Rendering Block --- */}
+      {/*  */}
 
       {currentView === 'start' && <StartScreen onStartClick={handleStartClick} />}
 
@@ -63,17 +64,17 @@ function App() {
           onLevelsClick={handleShowLevels}
           onSongsClick={handleShowSongList}
           onFreestyleClick={handleShowFreestyle}
-          // onForumClick={handleShowForum} 
+          //onForumClick={handleShowForum} 
         />
       )}
 
-      {/* Sheet Notation Views */}
+      {/* sheet notation view */}
       {currentView === 'levelList' && (
         <LevelList onBackClick={handleBackToMenu} onLevelSelect={handleShowSheetMusic} />
       )}
       {currentView === 'sheetMusic' && <SheetMusicView onBackClick={handleBackToLevels} />}
 
-      {/* Guided Songs Views */}
+      {/* song guide view */}
       {currentView === 'songList' && (
         <SongList onBackClick={handleBackToMenu} onSongSelect={handleSongSelect} />
       )}
@@ -81,13 +82,13 @@ function App() {
         <PlayerView songId={selectedSongId} onBackClick={handleBackToSongList} />
       )}
       
-      {/* Freestyle View */}
-      {currentView === 'freestyle' && <Piano onBackClick={handleBackToMenu} />}
+      {/* freestyle view */}
+      {currentView === 'freestyle' && <FreestyleView onBackClick={handleBackToMenu} />}
 
-      {/* Forum Views (for the future) */}
+      {/* placeholder for forum view (IMPLEMENT THIS LATER!!!) */}
       {/* {currentView === 'forumList' && <ForumList onBackClick={handleBackToMenu} />} */}
 
-      {/* --- Backend Connection Status --- */}
+      {/*backend connection status*/}
       <div style={{ position: 'fixed', bottom: 10, right: 20, fontSize: '0.9rem', opacity: 0.7 }}>
         {backendMsg}
       </div>
@@ -96,3 +97,5 @@ function App() {
 }
 
 export default App;
+
+//to run this just run the uvicorn command and then npm run dev in separate terminals
