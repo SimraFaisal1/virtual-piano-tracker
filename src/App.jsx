@@ -10,7 +10,7 @@ import PlayerView from './components/PlayerView';
 import Piano from './components/Piano';
 import FreestyleView from "./components/FreestyleView";
 
-// import ForumList from './components/ForumList';
+import ForumList from './components/ForumList';
 // import PostView from './components/PostView';
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
   const handleShowFreestyle = () => setCurrentView('freestyle');
 
   //forum flow (for the future)
-  //const handleShowForum = () => setCurrentView('forumList');
+  const handleShowForum = () => setCurrentView('forumList');
 
   return (
     <div className="App">
@@ -64,7 +64,7 @@ function App() {
           onLevelsClick={handleShowLevels}
           onSongsClick={handleShowSongList}
           onFreestyleClick={handleShowFreestyle}
-          //onForumClick={handleShowForum} 
+          onForumClick={handleShowForum} 
         />
       )}
 
@@ -85,8 +85,8 @@ function App() {
       {/* freestyle view */}
       {currentView === 'freestyle' && <FreestyleView onBackClick={handleBackToMenu} />}
 
-      {/* placeholder for forum view (IMPLEMENT THIS LATER!!!) */}
-      {/* {currentView === 'forumList' && <ForumList onBackClick={handleBackToMenu} />} */}
+      {/* foruym view*/}
+      {currentView === 'forumList' && <ForumList onBackClick={handleBackToMenu} />}
 
       {/*backend connection status*/}
       <div style={{ position: 'fixed', bottom: 10, right: 20, fontSize: '0.9rem', opacity: 0.7 }}>
@@ -98,4 +98,4 @@ function App() {
 
 export default App;
 
-//to run this just run the uvicorn command and then npm run dev in separate terminals
+//node index.js in server and then npm run dev to run

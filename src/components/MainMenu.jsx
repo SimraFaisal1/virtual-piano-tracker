@@ -1,9 +1,7 @@
 import styles from './MainMenu.module.css';
 
-/**
- * The main navigation menu for the app, it receives functions as "props" from App.jsx to tell the main app which
- * screen to navigate to when a button is clicked.
- */
+
+//main menu navigation stuff
 function MainMenu({ onFreestyleClick, onLevelsClick, onSongsClick, onForumClick }) {
   return (
     <div className={styles.menuContainer}>
@@ -21,9 +19,7 @@ function MainMenu({ onFreestyleClick, onLevelsClick, onSongsClick, onForumClick 
         Sheet Notation
       </button>
 
-      <button 
-        className={styles.menuButton} 
-      >
+      <button className={styles.menuButton} onClick={onForumClick}>
         Forum
       </button>
 
