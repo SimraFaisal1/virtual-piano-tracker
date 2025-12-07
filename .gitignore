@@ -32,3 +32,10 @@ __pycache__/
 
 # Operating system files
 .DS_Store
+
+venv/
+web/venv/
+node_modules/
+__pycache__/
+*.pyc
+.env

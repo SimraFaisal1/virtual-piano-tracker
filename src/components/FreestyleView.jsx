@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function FreestyleView({ onBackClick }) {
   const [log, setLog] = useState([]);
@@ -8,7 +8,7 @@ export default function FreestyleView({ onBackClick }) {
   const wsRef = useRef(null);
   const reconnectTimer = useRef(null);
 
-  //audio stuff
+  // audio stuff
   const audioCtxRef = useRef(null);
   const masterGainRef = useRef(null);
   const activeVoicesRef = useRef(new Map()); // note -> {osc, gain}
@@ -24,8 +24,9 @@ export default function FreestyleView({ onBackClick }) {
     setAudioReady(true);
   }
 
-  //setting up note frequencies (A=440)
+  // note → frequency
   const NOTE_SEMITONES = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 };
+
   function noteToFreq(noteLabel = "C4") {
     const m = /^([A-G])(#|b)?(\d+)?$/i.exec(noteLabel.trim());
     if (!m) return 440;
@@ -45,20 +46,21 @@ export default function FreestyleView({ onBackClick }) {
     if (!ctx || !master) return;
 
     const note = String(noteBase).toUpperCase();
-    if (activeVoicesRef.current.has(note)) return; //already sounding
+    if (activeVoicesRef.current.has(note)) return;
+
+    console.log("startNote called for", note);
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = "sine"; //tone (doesnt really matter but we can do "triangle"/"square" for different tones) 
+    osc.type = "sine";
     const freq = noteToFreq(/[0-9]/.test(note) ? note : `${note}4`);
     osc.frequency.value = freq;
     gain.gain.value = 0.0001;
 
-    //simple ADSR envelope
     const now = ctx.currentTime;
     gain.gain.cancelScheduledValues(now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.3, now + 0.01); //attack
+    gain.gain.exponentialRampToValueAtTime(0.3, now + 0.01);
 
     osc.connect(gain);
     gain.connect(master);
@@ -76,22 +78,30 @@ export default function FreestyleView({ onBackClick }) {
     const now = ctx.currentTime;
     voice.gain.gain.cancelScheduledValues(now);
     voice.gain.gain.setTargetAtTime(0.0001, now, 0.03);
-    try { voice.osc.stop(now + 0.08); } catch {}
+    try {
+      voice.osc.stop(now + 0.08);
+    } catch {}
     setTimeout(() => {
-      try { voice.osc.disconnect(); voice.gain.disconnect(); } catch {}
+      try {
+        voice.osc.disconnect();
+        voice.gain.disconnect();
+      } catch {}
     }, 120);
     activeVoicesRef.current.delete(note);
   }
 
-  //websocket
-  function makeWsUrl() {
-    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+  // WebSocket URL (no useMemo for now, keep it simple)
+  const [ts] = useState(() => Date.now());
+  const streamSrc = `/api/stream?ts=${ts}`;
 
-    return `${proto}//${window.location.host}/api/ws/notes`;
-  }
-
+  // websocket
   useEffect(() => {
     let stopped = false;
+
+    function makeWsUrl() {
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      return `${proto}//${window.location.host}/api/ws/notes`;
+    }
 
     function connect() {
       if (stopped) return;
@@ -101,11 +111,13 @@ export default function FreestyleView({ onBackClick }) {
 
       ws.onopen = () => setWsState("connected");
 
-      ws.onmessage = (evt) => {                               //DEBUGGING STUFF
-        const msg = JSON.parse(evt.data); //{ t, type, note } or {type: "hello"/"heartbeat"}
+      ws.onmessage = (evt) => {
+        const msg = JSON.parse(evt.data);
         if (msg.type === "hello" || msg.type === "heartbeat") {
           setLog((l) => {
-            const entry = `${new Date(msg.t ?? Date.now()).toLocaleTimeString()} ${msg.type.toUpperCase()}`;
+            const entry = `${new Date(
+              msg.t ?? Date.now()
+            ).toLocaleTimeString()} ${msg.type.toUpperCase()}`;
             return [entry, ...l].slice(0, 200);
           });
           return;
@@ -117,7 +129,6 @@ export default function FreestyleView({ onBackClick }) {
           return [entry, ...l].slice(0, 200);
         });
 
-        // trigger audio locally
         if (audioReady) {
           if (msg.type === "down") startNote(note);
           else if (msg.type === "up") stopNote(note);
@@ -134,26 +145,37 @@ export default function FreestyleView({ onBackClick }) {
     }
 
     connect();
+
     return () => {
       stopped = true;
       clearTimeout(reconnectTimer.current);
-      try { wsRef.current?.close(); } catch {}
+      try {
+        wsRef.current?.close();
+      } catch {}
     };
   }, [audioReady]);
 
-  const streamSrc = useMemo(() => `/api/stream?ts=${Date.now()}`, []);
 
-  //ui in the view
+  // UI
   return (
     <div style={{ padding: 16 }}>
-      <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
         <button onClick={onBackClick}>← Back</button>
 
         {!audioReady ? (
           <button
             onClick={async () => {
               initAudio();
-              try { await audioCtxRef.current?.resume(); } catch {}
+              try {
+                await audioCtxRef.current?.resume();
+              } catch {}
             }}
           >
             Enable Sound
@@ -178,7 +200,8 @@ export default function FreestyleView({ onBackClick }) {
             border: "1px solid #222",
           }}
           onError={(e) => {
-            e.currentTarget.alt = "Stream unavailable (check FastAPI /api/stream & webcam)";
+            e.currentTarget.alt =
+              "Stream unavailable (check FastAPI /api/stream & webcam)";
           }}
         />
 
@@ -196,7 +219,7 @@ export default function FreestyleView({ onBackClick }) {
               fontSize: "0.8rem",
             }}
           >
-{log.join("\n")}
+            {log.join("\n")}
           </pre>
         </div>
       </div>
