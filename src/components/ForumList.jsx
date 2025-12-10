@@ -7,13 +7,13 @@ export default function ForumList({ onBackClick }) {
         ← Back to Menu
       </button>
 
-      <h1>Community Forum – Leaderboard</h1>
-      <p style={{ opacity: 0.8, marginBottom: "1rem" }}>
+      <h1 style={{ color: '#ffd700', fontSize: '3rem', textShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}>Community Forum</h1>
+      <p style={{ opacity: 0.9, marginBottom: "1rem", fontSize: '1.2rem', color: 'white' }}>
         Leaderboard
       </p>
 
       <div className="leaderboard-card">
-        <h2 style={{ marginBottom: "1rem" }}>Top Users</h2>
+        <h2 style={{ marginBottom: "1rem", color: '#ffd700' }}>Top Users</h2>
         <table className="leaderboard-table">
           <thead>
             <tr>
@@ -64,9 +64,9 @@ export default function ForumList({ onBackClick }) {
         </table>
       </div>
 
-      <div style={{ marginTop: "2rem", opacity: 0.8 }}>
-        <h2>Forum Posts</h2>
-        <p>Forum posts will go here.</p>
+      <div style={{ marginTop: "2rem", opacity: 0.9, background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '2rem', maxWidth: '800px', width: '100%' }}>
+        <h2 style={{ color: '#ffd700' }}>Forum Posts</h2>
+        <p style={{ color: 'white' }}>Forum posts will go here.</p>
       </div>
     </div>
   );

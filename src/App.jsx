@@ -3,8 +3,6 @@ import './App.css';
 
 import StartScreen from './components/StartScreen';
 import MainMenu from './components/MainMenu';
-import LevelList from './components/LevelList';
-import SheetMusicView from './components/SheetMusicView';
 import SongList from './components/SongList';
 import PlayerView from './components/PlayerView';
 import Piano from './components/Piano';
@@ -34,11 +32,6 @@ function App() {
   const handleStartClick = () => setCurrentView('mainMenu');
   const handleBackToMenu = () => setCurrentView('mainMenu');
 
-  // sheet notation flow
-  const handleShowLevels = () => setCurrentView('levelList');
-  const handleShowSheetMusic = () => setCurrentView('sheetMusic');
-  const handleBackToLevels = () => setCurrentView('levelList');
-
   //guided songs flow
   const handleShowSongList = () => setCurrentView('songList');
   const handleSongSelect = (songId) => {
@@ -46,7 +39,7 @@ function App() {
     setCurrentView('player');
   };
   const handleBackToSongList = () => setCurrentView('songList');
-  
+
   //Freestyle Flow
   const handleShowFreestyle = () => setCurrentView('freestyle');
 
@@ -61,18 +54,11 @@ function App() {
 
       {currentView === 'mainMenu' && (
         <MainMenu
-          onLevelsClick={handleShowLevels}
           onSongsClick={handleShowSongList}
           onFreestyleClick={handleShowFreestyle}
-          onForumClick={handleShowForum} 
+          onForumClick={handleShowForum}
         />
       )}
-
-      {/* sheet notation view */}
-      {currentView === 'levelList' && (
-        <LevelList onBackClick={handleBackToMenu} onLevelSelect={handleShowSheetMusic} />
-      )}
-      {currentView === 'sheetMusic' && <SheetMusicView onBackClick={handleBackToLevels} />}
 
       {/* song guide view */}
       {currentView === 'songList' && (
@@ -81,7 +67,7 @@ function App() {
       {currentView === 'player' && (
         <PlayerView songId={selectedSongId} onBackClick={handleBackToSongList} />
       )}
-      
+
       {/* freestyle view */}
       {currentView === 'freestyle' && <FreestyleView onBackClick={handleBackToMenu} />}
 
