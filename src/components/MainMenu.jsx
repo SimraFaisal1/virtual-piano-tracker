@@ -1,34 +1,69 @@
+import { useState, useEffect } from 'react';
 import styles from './MainMenu.module.css';
 
+/**
+ * The main navigation menu for the app, it receives functions as "props" from App.jsx to tell the main app which
+ * screen to navigate to when a button is clicked.
+ */
 
-//main menu navigation stuff
-function MainMenu({ onFreestyleClick, onLevelsClick, onSongsClick, onForumClick }) {
+//PUT YOUR VIRTIUAL PIANI TEACHER THING FONT
+function MainMenu({ onFreestyleClick, onSongsClick, onForumClick }) {
+  const [animate, setAnimate] = useState(false);
+  //removing sheet music view
+  useEffect(() => {
+    setAnimate(true);
+  }, []);
+
+  const menuOptions = [
+    {
+      icon: '🎹',
+      title: 'Freestyle',
+      description: 'Play freely on the piano',
+      onClick: onFreestyleClick,
+      delay: 1
+    },
+    {
+      icon: '🎵',
+      title: 'Songs',
+      description: 'Practice popular songs',
+      onClick: onSongsClick,
+      delay: 2
+    },
+    {
+      icon: '💬',
+      title: 'Forum',
+      description: 'Connect with learners',
+      onClick: onForumClick,
+      delay: 3
+    }
+  ];
+
   return (
     <div className={styles.menuContainer}>
-      <button 
-        className={styles.menuButton} 
-        onClick={onFreestyleClick}
-      >
-        Freestyle
-      </button>
 
-      <button 
-        className={styles.menuButton} 
-        onClick={onLevelsClick}
-      >
-        Sheet Notation
-      </button>
 
-      <button className={styles.menuButton} onClick={onForumClick}>
-        Forum
-      </button>
+      <div className={styles.header}>
+        <h1 className={`${styles.title} ${animate ? styles.fadeIn : ''}`}>
+          Select a Mode!
+        </h1>
+      </div>
 
-      <button 
-        className={styles.menuButton} 
-        onClick={onSongsClick}
-      >
-        Songs
-      </button>
+      <div className={styles.buttonsGrid}>
+        {menuOptions.map((option, index) => (
+          <button
+            key={option.title}
+            className={`${styles.menuButton}  ${animate ? styles.fadeInUp : ''
+              }`}
+            style={{ animationDelay: `${option.delay * 0.1}s` }}
+            onClick={option.onClick}
+          >
+            <span className={styles.buttonIcon}>{option.icon}</span>
+            <span className={styles.buttonTitle}>{option.title}</span>
+            <span className={styles.buttonDescription}>{option.description}</span>
+            <div className={styles.buttonGlow}></div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

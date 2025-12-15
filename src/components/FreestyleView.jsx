@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function FreestyleView({ onBackClick }) {
   const [log, setLog] = useState([]);
@@ -8,7 +8,7 @@ export default function FreestyleView({ onBackClick }) {
   const wsRef = useRef(null);
   const reconnectTimer = useRef(null);
 
-  //audio stuff
+  // audio stuff
   const audioCtxRef = useRef(null);
   const masterGainRef = useRef(null);
   const activeVoicesRef = useRef(new Map()); // note -> {osc, gain}
@@ -24,8 +24,9 @@ export default function FreestyleView({ onBackClick }) {
     setAudioReady(true);
   }
 
-  //setting up note frequencies (A=440)
+  // note → frequency
   const NOTE_SEMITONES = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 };
+
   function noteToFreq(noteLabel = "C4") {
     const m = /^([A-G])(#|b)?(\d+)?$/i.exec(noteLabel.trim());
     if (!m) return 440;
@@ -45,20 +46,21 @@ export default function FreestyleView({ onBackClick }) {
     if (!ctx || !master) return;
 
     const note = String(noteBase).toUpperCase();
-    if (activeVoicesRef.current.has(note)) return; //already sounding
+    if (activeVoicesRef.current.has(note)) return;
+
+    console.log("startNote called for", note);
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = "sine"; //tone (doesnt really matter but we can do "triangle"/"square" for different tones) 
+    osc.type = "sine";
     const freq = noteToFreq(/[0-9]/.test(note) ? note : `${note}4`);
     osc.frequency.value = freq;
     gain.gain.value = 0.0001;
 
-    //simple ADSR envelope
     const now = ctx.currentTime;
     gain.gain.cancelScheduledValues(now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.3, now + 0.01); //attack
+    gain.gain.exponentialRampToValueAtTime(0.3, now + 0.01);
 
     osc.connect(gain);
     gain.connect(master);
@@ -76,22 +78,30 @@ export default function FreestyleView({ onBackClick }) {
     const now = ctx.currentTime;
     voice.gain.gain.cancelScheduledValues(now);
     voice.gain.gain.setTargetAtTime(0.0001, now, 0.03);
-    try { voice.osc.stop(now + 0.08); } catch {}
+    try {
+      voice.osc.stop(now + 0.08);
+    } catch { }
     setTimeout(() => {
-      try { voice.osc.disconnect(); voice.gain.disconnect(); } catch {}
+      try {
+        voice.osc.disconnect();
+        voice.gain.disconnect();
+      } catch { }
     }, 120);
     activeVoicesRef.current.delete(note);
   }
 
-  //websocket
-  function makeWsUrl() {
-    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+  // WebSocket URL (no useMemo for now, keep it simple)
+  const [ts] = useState(() => Date.now());
+  const streamSrc = `/api/stream?ts=${ts}`;
 
-    return `${proto}//${window.location.host}/api/ws/notes`;
-  }
-
+  // websocket
   useEffect(() => {
     let stopped = false;
+
+    function makeWsUrl() {
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      return `${proto}//${window.location.host}/api/ws/notes`;
+    }
 
     function connect() {
       if (stopped) return;
@@ -101,11 +111,13 @@ export default function FreestyleView({ onBackClick }) {
 
       ws.onopen = () => setWsState("connected");
 
-      ws.onmessage = (evt) => {                               //DEBUGGING STUFF
-        const msg = JSON.parse(evt.data); //{ t, type, note } or {type: "hello"/"heartbeat"}
+      ws.onmessage = (evt) => {
+        const msg = JSON.parse(evt.data);
         if (msg.type === "hello" || msg.type === "heartbeat") {
           setLog((l) => {
-            const entry = `${new Date(msg.t ?? Date.now()).toLocaleTimeString()} ${msg.type.toUpperCase()}`;
+            const entry = `${new Date(
+              msg.t ?? Date.now()
+            ).toLocaleTimeString()} ${msg.type.toUpperCase()}`;
             return [entry, ...l].slice(0, 200);
           });
           return;
@@ -117,7 +129,6 @@ export default function FreestyleView({ onBackClick }) {
           return [entry, ...l].slice(0, 200);
         });
 
-        // trigger audio locally
         if (audioReady) {
           if (msg.type === "down") startNote(note);
           else if (msg.type === "up") stopNote(note);
@@ -134,35 +145,78 @@ export default function FreestyleView({ onBackClick }) {
     }
 
     connect();
+
     return () => {
       stopped = true;
       clearTimeout(reconnectTimer.current);
-      try { wsRef.current?.close(); } catch {}
+      try {
+        wsRef.current?.close();
+      } catch { }
     };
   }, [audioReady]);
 
-  const streamSrc = useMemo(() => `/api/stream?ts=${Date.now()}`, []);
 
-  //ui in the view
+  // UI
   return (
-    <div style={{ padding: 16 }}>
-      <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12 }}>
-        <button onClick={onBackClick}>← Back</button>
+    <div style={{
+      padding: '2rem',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0a1128 0%, #1c2541 50%, #0f1c3f 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite'
+    }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <button
+          onClick={onBackClick}
+          style={{
+            padding: '0.8rem 1.5rem',
+            background: 'rgba(255, 255, 255, 0.1)',
+            border: '2px solid rgba(212, 175, 55, 0.5)',
+            borderRadius: '12px',
+            color: '#ffd700',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: '600',
+            transition: 'all 0.3s'
+          }}
+        >
+          ← Back
+        </button>
 
         {!audioReady ? (
           <button
             onClick={async () => {
               initAudio();
-              try { await audioCtxRef.current?.resume(); } catch {}
+              try {
+                await audioCtxRef.current?.resume();
+              } catch { }
+            }}
+            style={{
+              padding: '0.8rem 1.5rem',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '2px solid rgba(212, 175, 55, 0.5)',
+              borderRadius: '12px',
+              color: '#ffd700',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.3s'
             }}
           >
             Enable Sound
           </button>
         ) : (
-          <span style={{ opacity: 0.7 }}>Audio on</span>
+          <span style={{ opacity: 0.9, color: '#ffd700', fontWeight: '600' }}>Audio on</span>
         )}
 
-        <span style={{ opacity: 0.7 }}>WS: {wsState}</span>
+        <span style={{ opacity: 0.9, color: 'white', fontWeight: '600' }}>WS: {wsState}</span>
       </div>
 
       <div style={{ display: "flex", gap: 16 }}>
@@ -174,29 +228,34 @@ export default function FreestyleView({ onBackClick }) {
             flex: 1,
             width: "100%",
             minHeight: 260,
-            borderRadius: 8,
-            border: "1px solid #222",
+            borderRadius: 16,
+            border: "2px solid rgba(212, 175, 55, 0.3)",
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
           }}
           onError={(e) => {
-            e.currentTarget.alt = "Stream unavailable (check FastAPI /api/stream & webcam)";
+            e.currentTarget.alt =
+              "Stream unavailable (check FastAPI /api/stream & webcam)";
           }}
         />
 
         {/* event log */}
         <div style={{ width: "30%" }}>
-          <h4>Events</h4>
+          <h4 style={{ color: '#ffd700', marginBottom: '1rem' }}>Events</h4>
           <pre
             style={{
               maxHeight: 400,
               overflow: "auto",
-              background: "#111",
-              color: "#eee",
-              padding: 8,
-              borderRadius: 8,
-              fontSize: "0.8rem",
+              background: "rgba(0, 0, 0, 0.5)",
+              backdropFilter: 'blur(10px)',
+              color: "#f5f5f5",
+              padding: 16,
+              borderRadius: 16,
+              fontSize: "0.9rem",
+              border: "2px solid rgba(212, 175, 55, 0.3)",
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
             }}
           >
-{log.join("\n")}
+            {log.join("\n")}
           </pre>
         </div>
       </div>

@@ -7,18 +7,29 @@
 // })
 
 
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8000',
+      // Express (songs, etc.) on 4000:
+      '/api/songs': {
+        target: 'http://localhost:4000',
         changeOrigin: true,
-        ws: true,                       //we need web sockets now for cam audio stuff
+      },
+
+      // CV FastAPI on 8000:
+      '/api/stream': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/api/ws': {
+        target: 'ws://localhost:8000',
+        ws: true,
+        changeOrigin: true,
       },
     },
   },
-})
+});
