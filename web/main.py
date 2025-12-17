@@ -99,9 +99,13 @@ finger_below_line = False
 def draw_piano_and_hands(frame):
     global current_notes, last_pressed, finger_below_line
 
+    
+
     # Draw piano + hands and update the set of currently pressed notes.
     frame = cv2.flip(frame, 1)
     h, w, _ = frame.shape
+
+    raw = frame.copy()
 
     # --- piano rectangles ---
     scale = w / (WHITE_KEYS * WHITE_WIDTH)
@@ -123,10 +127,19 @@ def draw_piano_and_hands(frame):
         cv2.rectangle(frame, (i*white_width - black_width//2, top_y),
                       (i*white_width + black_width//2, top_y + int((bottom_y-top_y)*0.6)),
                       (0,0,0), -1)
-    white_rects, black_rects = get_piano_rectangles(WHITE_KEYS * WHITE_WIDTH)
+    white_rects = [
+        (i, (i*white_width, top_y, (i+1)*white_width, bottom_y))
+        for i in range(WHITE_KEYS)
+    ]
+
+    black_rects = [
+        (i, (i*white_width - black_width//2, top_y,
+            i*white_width + black_width//2, top_y + int((bottom_y-top_y)*0.6)))
+        for i in BLACK_POSITIONS
+    ]
 
     # --- mediapipe hands + fingertip circles ---
-    result = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    result = hands.process(cv2.cvtColor(raw, cv2.COLOR_BGR2RGB))
     finger_tip_ids = [4, 8, 12, 16, 20]
 
     detected_notes = set()

@@ -34,6 +34,7 @@ __pycache__/
 .DS_Store
 
 venv/
+myenv/
 web/venv/
 node_modules/
 __pycache__/
