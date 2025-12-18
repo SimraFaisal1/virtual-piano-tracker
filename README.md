@@ -1,1 +1,20 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/19BwrNgF)
+# Introduction
+
+## What is the Virtual Piano Website?
+Piano is an instrument that a lot of people are deeply interested in learning. However, there are some limitations in terms of the finances for getting the instrument or even hiring a teacher and committing specific hours to classes. This tool aims to provide free-access to a virtual piano that provides basic functionality along with mini lessons that can be done at the user’s convenience.
+
+For more details, view the full project proposal [here](https://docs.google.com/document/d/1pkxDHbYGbWe_pH_AxGgNAwO4P3VTYI0WYEBoXAxSFFA/edit?usp=sharing).
+
+# Technical Architecture
+<img width="763" height="679" alt="Image" src="https://github.com/user-attachments/assets/0f3a5504-cd9c-4f96-983d-ccaf457b1829" />
+
+# Developers
+- **Simra Faisal:** Developing the piano and finger tracking connection, note tracking draft for Happy Birthday, dockerfile
+- **Ria Sinha:** Hand tracking for base computer vision
+- **Anthony:**
+- **Minyoung:**
+
+# Environment Setup - show installation
+just mention PY 3.9.6 setup here
+
+# Project Instruction
