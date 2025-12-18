@@ -11,7 +11,7 @@ For more details, view the full project proposal [here](https://docs.google.com/
 # Developers
 - **Simra Faisal:** Developing the piano and finger tracking connection, note tracking draft for Happy Birthday, dockerfile
 - **Ria Sinha:** Hand tracking for base computer vision
-- **Anthony:**
+- **Anthony Smykalov: Initial Vite & React frontend base, Node.js backend server, REST APIs and WebSockets**
 - **Minyoung:**
 
 # Environment Setup - show installation
