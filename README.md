@@ -15,7 +15,6 @@ For more details, view the full project proposal [here](https://docs.google.com/
 - **Minyoung:**
 
 # Environment Setup - show installation
-just mention PY 3.9.6 setup here
 - Install Python 3.9.6-3.10.11
 - Clone the repo
 - `cd cv-piano-webapp`
