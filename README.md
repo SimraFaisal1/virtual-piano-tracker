@@ -11,10 +11,21 @@ For more details, view the full project proposal [here](https://docs.google.com/
 # Developers
 - **Simra Faisal:** Developing the piano and finger tracking connection, note tracking draft for Happy Birthday, dockerfile
 - **Ria Sinha:** Hand tracking for base computer vision
-- **Anthony Smykalov:** Initial Vite & React frontend base, Node.js backend server, REST APIs and WebSockets
-- **Minyoung:** Optimizing the python finger tracking events to send to the frontend. Implemented Uvicorn python streaming to send to server. Designed the forum section in the webapp.
+- **Anthony Smykalov: Initial Vite & React frontend base, Node.js backend server, REST APIs and WebSockets**
+- **Minyoung:**
 
 # Environment Setup - show installation
 just mention PY 3.9.6 setup here
+- Install Python 3.9.6-3.10.11
+- Clone the repo
+- `cd cv-piano-webapp`
+- Activate virtual environment `python -m venv .\myenv`
+- `pip install --upgrade pip`
+- `pip install -r requirements.txt`
+- Activate virtual environment `myenv\Scripts\Activate.ps1`
+- `python -m uvicorn web.main:app --port 8000`
+- `cd server` then `node index.js`
+- `npm run dev`
+- Open `http://localhost:5173`
 
 # Project Instruction
