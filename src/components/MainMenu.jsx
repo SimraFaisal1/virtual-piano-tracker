@@ -22,19 +22,13 @@ function MainMenu({ onFreestyleClick, onSongsClick, onForumClick }) {
       onClick: onFreestyleClick,
       delay: 1
     },
-    {
-      icon: '🎵',
-      title: 'Songs',
-      description: 'Practice popular songs',
-      onClick: onSongsClick,
-      delay: 2
-    },
+    // Songs entry removed as requested
     {
       icon: '💬',
       title: 'Forum',
       description: 'Connect with learners',
       onClick: onForumClick,
-      delay: 3
+      delay: 2
     }
   ];
 
