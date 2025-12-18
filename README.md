@@ -17,14 +17,38 @@ For more details, view the full project proposal [here](https://docs.google.com/
 # Environment Setup
 - Install Python 3.9.6-3.10.11
 - Clone the repo
-- `cd cv-piano-webapp`
-- Activate virtual environment `python -m venv .\myenv`
-- `pip install --upgrade pip`
-- `pip install -r requirements.txt`
-- Activate virtual environment `myenv\Scripts\Activate.ps1`
-- `python -m uvicorn web.main:app --port 8000`
-- `cd server` then `node index.js`
-- `npm run dev`
-- Open `http://localhost:5173`
+```bash
+cd cv-piano-webapp
+```
+- Activate virtual environment
+```bash
+python -m venv .\myenv
+```
+```bash
+pip install --upgrade pip
+```
+```bash
+pip install -r requirements.txt
+```
+- Activate virtual environment
+```bash
+myenv\Scripts\Activate.ps1
+```
+```bash 
+python -m uvicorn web.main:app --port 8000
+```
+```bash 
+cd server
+```
+```bash 
+node index.js
+```
+```bash
+npm run dev
+```
+- Open
+```bash
+http://localhost:5173
+```
 
 # Project Instruction
